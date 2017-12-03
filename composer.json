@@ -1,0 +1,27 @@
+{
+    "name": "stratdes/shared-kernel",
+    "description": "Simple shared kernel for DDD applications, with many scaffolding code for Hexagonal architecture, event sourcing, etc.",
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Hernández",
+            "email": "info@alexhernandez.info"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "StraTDeS\\SharedKernel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StraTDeS\\SharedKernel\\Tests\\": "tests/"
+        }
+    }
+}
