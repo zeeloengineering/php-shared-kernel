@@ -9,16 +9,7 @@
 
 namespace StraTDeS\SharedKernel\Domain;
 
-interface Repository
+class EntityNotFoundException extends GenericDomainException
 {
-    /**
-     * @param Id $id
-     * @return Entity
-     * @throws EntityNotFoundException
-     */
-    public function get(Id $id): Entity;
 
-    public function find(Id $id): ?Entity;
-
-    public function all(): array;
 }

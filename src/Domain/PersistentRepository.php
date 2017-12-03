@@ -9,7 +9,13 @@
 
 namespace StraTDeS\SharedKernel\Domain;
 
+use StraTDeS\SharedKernel\Infrastructure\RepositoryException;
+
 interface PersistentRepository
 {
+    /**
+     * @param Entity $entity
+     * @throws RepositoryException
+     */
     public function save(Entity $entity): void;
 }

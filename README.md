@@ -286,3 +286,30 @@ the process.
 
 So in the namespace StraTDeS\SharedKernel\Application\CQRS you have abstract classes for both Command and Query, and
 interfaces for both CommandHandler and QueryHandler.
+
+## Repositories
+
+There are some useful interfaces to implement repositories, including get, find, all interface and save interface. Apart,
+I have included two basic doctrine repositories, DoctrineRepository and DoctrinePersistentRepository. You can use it to
+have some features for free:
+
+```php
+<?php
+
+use StraTDeS\SharedKernel\Infrastructure\DoctrinePersistentRepository;
+use StraTDeS\SharedKernel\Domain\UUIDV4;
+
+class DoctrinePersonRepository extends DoctrinePersistentRepository implements PersonRepository
+{
+    public function getEntityName(): string
+    {
+        return Person::class;
+    }
+}
+
+// person repository creation ...
+
+$person = $personRepository->get(UUIDV4::fromString('6238ec41-71d0-4482-97f5-4c5c4919e635'));
+$person->changeName('John');
+$personRepository->save($person);
+```

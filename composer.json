@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "ramsey/uuid": "^3.7"
+        "ramsey/uuid": "^3.7",
+        "doctrine/orm": "^2.5"
     },
     "autoload": {
         "psr-4": {
