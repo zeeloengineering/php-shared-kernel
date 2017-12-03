@@ -25,6 +25,25 @@ class Person extends Entity
         $this->name = $name;
         $this->surname = $surname;
     }
+    
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+    
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId()->getHumanReadableId(),
+            'name' => $this->getName(),
+            'surname' => $this->getSurname()
+        ];
+    }
 }
 ```
 
@@ -62,6 +81,25 @@ class Person extends Entity
             )
         );
     }
+    
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+    
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId()->getHumanReadableId(),
+            'name' => $this->getName(),
+            'surname' => $this->getSurname()
+        ];
+    }
 }
 
 $person = new Person(
@@ -72,6 +110,9 @@ $person = new Person(
 
 $eventStream = $person->pullEventStream();
 ```
+
+Note you must implements toArray method. This method is very useful when you data transform entities or event to
+to serialize it.
 
 ## Entity collections
 
@@ -141,3 +182,107 @@ class PersonCreated extends DomainEvent
     }
 }
 ```
+
+## UseCase
+
+A very simple way to access Domain and Infrastructure layers from your console commands or controllers is through an
+Application UseCase. A UseCase receives a Request and may return (or null) a Response. Let's see an example:
+
+```php
+<?php
+
+use StraTDeS\SharedKernel\Application\UseCase\UseCase;
+use StraTDeS\SharedKernel\Application\UseCase\Request;
+use StraTDeS\SharedKernel\Application\UseCase\Response;
+use StraTDeS\SharedKernel\Domain\Id;
+use StraTDeS\SharedKernel\Application\DataTransformer;
+
+class PersonCollectionToArrayDataTransformer implements DataTransformer
+{
+    /**
+     * @param mixed|PersonCollection $data
+     * @return array
+     */
+    public function transform(mixed $data): mixed
+    {
+        $persons = [];
+        
+        foreach($data as $person) {
+            $persons[] = $person->toArray();
+        }
+        
+        return $persons;
+    }
+}
+
+class GetUserByIdRequest extends Request
+{
+    private $id;
+    
+    public function __construct(Id $id) 
+    {
+        $this->id = $id;
+    }
+    
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+}
+
+class GetUserByIdResponse extends Response
+{
+    private $persons;
+    
+    public function __construct(mixed $persons) 
+    {
+        $this->persons = $persons;
+    }
+    
+    public function getPersons(): mixed
+    {
+        return $this->persons;
+    }
+}
+
+class GetUserByIdUseCase extends UseCase
+{
+    private $dataTransformer;
+    
+    public function __construct(DataTransformer $dataTransformer) 
+    {
+        $this->dataTransformer = $dataTransformer;
+    }
+    
+    public function execute(Request $getUserByIdRequest): Response
+    {
+        $userCollection = //my repository query returns a PersonCollection
+        
+        return new GetUserByIdResponse($this->dataTransformer->transform($userCollection));
+    }
+}
+```
+
+Probably you have noted the DataTransformer object. It provides functionality to transform any object into any other
+in the application layer. This means you can use the same UseCase to retrieve information in different formats just
+injecting a different data transformer. This is basic to not return domain objects to the infrastructure layer.
+
+I recommend defining your use cases with different names based in the data transformer you inject. For example:
+
+- get_user_by_id_use_case_data_transformed_to_array
+- get_user_by_id_use_case_data_transformed_to_json
+
+This can be easily done if you use a decent dependency injector. 
+
+## CQRS
+
+CQRS stands for Command Query Responsibility Segregation and basically means that a method should either return
+a value of modify it's context, never both things at the same time.
+
+I have provided with some useful interfaces to work both with Commands (to change context) and Queries (to retrieve
+information). This is used to be done through command and query buses. A bus accepts some kind of request (a Command
+or a Query) and processes it through a handler (a CommandHandler or a QueryHandler). Middlewares can be added along
+the process.
+
+So in the namespace StraTDeS\SharedKernel\Application\CQRS you have abstract classes for both Command and Query, and
+interfaces for both CommandHandler and QueryHandler.

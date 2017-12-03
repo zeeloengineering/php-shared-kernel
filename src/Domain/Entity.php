@@ -41,4 +41,11 @@ abstract class Entity
     {
         $this->eventStream = new EventStream();
     }
+
+    public function getId(): Id
+    {
+        return $this->id;
+    }
+
+    public abstract function toArray(): array;
 }

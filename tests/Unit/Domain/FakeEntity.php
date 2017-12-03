@@ -18,4 +18,9 @@ class FakeEntity extends Entity
     {
         parent::__construct($id);
     }
+
+    public function toArray(): array
+    {
+        return [];
+    }
 }
