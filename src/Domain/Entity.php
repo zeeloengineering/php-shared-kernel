@@ -12,7 +12,7 @@ namespace StraTDeS\SharedKernel\Domain;
 abstract class Entity
 {
     /** @var Id */
-    private $id;
+    protected $id;
 
     /** @var EventStream */
     private $eventStream;
