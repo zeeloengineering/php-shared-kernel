@@ -23,4 +23,15 @@ abstract class EntityCollection
     {
         return $this->entities;
     }
+
+    public function toArray(): array
+    {
+        $entities = [];
+
+        foreach($this->entities as $entity) {
+            $entities[] = $entity->toArray();
+        }
+
+        return $entities;
+    }
 }
