@@ -11,7 +11,7 @@ namespace StraTDeS\SharedKernel\Domain;
 
 abstract class Id
 {
-    public abstract function getId(): mixed;
+    public abstract function getId();
 
     public abstract static function fromString(string $string): Id;
 

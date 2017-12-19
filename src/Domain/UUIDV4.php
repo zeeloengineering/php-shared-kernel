@@ -32,13 +32,18 @@ final class UUIDV4 extends GenerableId
         return new self(Uuid::fromString($string));
     }
 
-    public function getId(): mixed
+    public function getId()
     {
-        return $this->id;
+        return $this->id->getBytes();
     }
 
     public function getHumanReadableId(): string
     {
         return $this->id->toString();
+    }
+
+    public function __toString()
+    {
+        return $this->getHumanReadableId();
     }
 }
