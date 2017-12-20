@@ -51,9 +51,10 @@ abstract class DoctrineRepository implements Repository
         }
     }
 
-    public function all(): array
+    public function all(int $offset, int $limit): array
     {
-        return $this->entityManager->getRepository($this->getEntityName())->findAll();
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->findBy([], null, $limit, $offset);
     }
 
     public abstract function getEntityName(): string;
