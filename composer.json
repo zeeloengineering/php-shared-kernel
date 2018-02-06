@@ -1,5 +1,5 @@
 {
-    "name": "stratdes/shared-kernel",
+    "name": "zeeloengineering/php-shared-kernel",
     "description": "Simple shared kernel for DDD applications, with many scaffolding code for Hexagonal architecture, event sourcing, etc.",
     "require-dev": {
         "phpunit/phpunit": "^6.5"
