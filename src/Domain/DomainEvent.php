@@ -17,14 +17,23 @@ abstract class DomainEvent
     /** @var Id */
     private $entityId;
 
+    /** @var Id */
+    private $creator;
+
     /** @var \DateTime */
     private $createdAt;
 
-    protected function __construct(Id $id, Id $entityId)
+    public function __construct(
+        Id $id,
+        Id $entityId,
+        Id $creator = null,
+        \DateTime $createdAt = null
+    )
     {
         $this->id = $id;
         $this->entityId = $entityId;
-        $this->createdAt = new \DateTime();
+        $this->creator = $creator;
+        $this->createdAt = $createdAt ?? new \DateTime();
     }
 
     final public function getId(): Id
@@ -37,8 +46,19 @@ abstract class DomainEvent
         return $this->entityId;
     }
 
+    public function getCreator(): ?Id
+    {
+        return $this->creator;
+    }
+
     final public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
+
+    public abstract function getCode(): string;
+
+    public abstract function getVersion(): int;
+
+    public abstract function getData(): array;
 }
