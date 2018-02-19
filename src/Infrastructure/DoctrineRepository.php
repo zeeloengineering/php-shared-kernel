@@ -51,11 +51,27 @@ abstract class DoctrineRepository implements Repository
         }
     }
 
-    public function all(int $offset, int $limit): array
+    public function all(int $offset = null, int $limit = null, $orderColumn = null, $orderDirection = null): array
     {
+        $orderBy = $this->generateOrderByArray($orderColumn, $orderDirection);
+
         return $this->entityManager->getRepository($this->getEntityName())
-            ->findBy([], null, $limit, $offset);
+            ->findBy([], $orderBy, $limit ?? 10, $offset ?? 0);
     }
 
     public abstract function getEntityName(): string;
+
+    /**
+     * @param $orderColumn
+     * @param $orderDirection
+     * @return array|null
+     */
+    private function generateOrderByArray($orderColumn, $orderDirection)
+    {
+        $orderBy = null;
+        if ($orderColumn && $orderDirection) {
+            $orderBy = [$orderColumn => $orderDirection];
+        }
+        return $orderBy;
+    }
 }

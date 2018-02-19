@@ -7,19 +7,20 @@ use StraTDeS\SharedKernel\Domain\UUIDV4;
 class DoctrineUUIDV4 extends Type
 {
     /**
-     * @param UUIDV4 $sqlExpr
+     * @param mixed|UUIDV4 $value
      * @param AbstractPlatform $platform
-     * @return string
+     * @return mixed
      */
-    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $sqlExpr->getHumanReadableId();
+        return $value->getId();
     }
 
-    public function convertToPHPValueSQL($sqlExpr, $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return UUIDV4::fromString($sqlExpr);
+        return UUIDV4::fromString(bin2hex($value));
     }
+
 
     /**
      * Gets the SQL declaration snippet for a field of this type.
