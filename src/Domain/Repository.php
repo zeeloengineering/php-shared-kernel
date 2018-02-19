@@ -21,4 +21,8 @@ interface Repository
     public function find(Id $id): ?Entity;
 
     public function all(int $offset, int $limit): array;
+
+    public function findByCriteria(array $criteria): array;
+
+    public function findOneByCriteria(array $criteria): ?Entity;
 }
