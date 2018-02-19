@@ -59,6 +59,18 @@ abstract class DoctrineRepository implements Repository
             ->findBy([], $orderBy, $limit ?? 10, $offset ?? 0);
     }
 
+    public function findByCriteria(array $criteria): array
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->findBy($criteria);
+    }
+
+    public function findOneByCriteria(array $criteria): ?Entity
+    {
+        return $this->entityManager->getRepository($this->getEntityName())
+            ->findOneBy($criteria);
+    }
+
     public abstract function getEntityName(): string;
 
     /**
