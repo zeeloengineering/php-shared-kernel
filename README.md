@@ -35,15 +35,6 @@ class Person extends Entity
     {
         return $this->surname;
     }
-    
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId()->getHumanReadableId(),
-            'name' => $this->getName(),
-            'surname' => $this->getSurname()
-        ];
-    }
 }
 ```
 
@@ -91,15 +82,6 @@ class Person extends Entity
     {
         return $this->surname;
     }
-    
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId()->getHumanReadableId(),
-            'name' => $this->getName(),
-            'surname' => $this->getSurname()
-        ];
-    }
 }
 
 $person = new Person(
@@ -110,9 +92,6 @@ $person = new Person(
 
 $eventStream = $person->pullEventStream();
 ```
-
-Note you must implements toArray method. This method is very useful when you data transform entities or event to
-to serialize it.
 
 ## Entity collections
 

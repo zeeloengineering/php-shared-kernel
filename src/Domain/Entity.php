@@ -46,6 +46,4 @@ abstract class Entity
     {
         return $this->id;
     }
-
-    public abstract function toArray(): array;
 }
