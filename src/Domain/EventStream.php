@@ -19,6 +19,9 @@ class EventStream
         $this->events[] = $event;
     }
 
+    /**
+     * @return array|DomainEvent[]
+     */
     public function getEvents(): array
     {
         return $this->events;
