@@ -1,15 +1,18 @@
 <?php namespace StraTDeS\SharedKernel\Domain;
 
+use ReflectionException;
+
 class EventSourcedEntity extends Entity
 {
     /**
      * @param string $className
-     * @return object
-     * @throws \ReflectionException
+     * @return Entity
+     * @throws ReflectionException
      */
-    private static function generateEntityFromReflection(string $className): object
+    private static function generateEntityFromReflection(string $className): Entity
     {
         $reflectedEntity = new \ReflectionClass($className);
+        /** @var Entity $entity */
         $entity = $reflectedEntity->newInstanceWithoutConstructor();
         return $entity;
     }
@@ -17,7 +20,7 @@ class EventSourcedEntity extends Entity
     /**
      * @param DomainEvent $event
      * @throws EventApplierMethodNotDefinedException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     final protected function recordAndApplyThat(DomainEvent $event): void
     {
@@ -28,7 +31,7 @@ class EventSourcedEntity extends Entity
     /**
      * @param DomainEvent $event
      * @throws EventApplierMethodNotDefinedException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     final private function apply(DomainEvent $event): void
     {
@@ -46,7 +49,7 @@ class EventSourcedEntity extends Entity
      * @param string $className
      * @param EventStream $eventStream
      * @return Entity
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function reconstituteFromEventStream(string $className, EventStream $eventStream): Entity
     {
@@ -71,7 +74,7 @@ class EventSourcedEntity extends Entity
     /**
      * @param $entity
      * @param $event
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private static function executeApplyFromReflection($entity, $event): void
     {
@@ -80,7 +83,7 @@ class EventSourcedEntity extends Entity
 
     /**
      * @param Entity $entity
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private static function executeResetEventStreamFromReflection(Entity $entity): void
     {
@@ -91,7 +94,7 @@ class EventSourcedEntity extends Entity
      * @param $entity
      * @param $method
      * @param $param
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private static function executeMethodFromReflection($entity, $method, $param = null): void
     {
