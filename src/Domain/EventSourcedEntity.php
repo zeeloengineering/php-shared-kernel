@@ -4,6 +4,9 @@ use ReflectionException;
 
 class EventSourcedEntity extends Entity
 {
+    /** @var bool */
+    private $disabled = false;
+
     /**
      * @param string $className
      * @return Entity
@@ -102,5 +105,10 @@ class EventSourcedEntity extends Entity
         $method->setAccessible(true);
         $method->invoke($entity, $param);
         $method->setAccessible(false);
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
     }
 }
