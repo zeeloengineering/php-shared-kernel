@@ -3,6 +3,18 @@
 class EventSourcedEntity extends Entity
 {
     /**
+     * @param string $className
+     * @return object
+     * @throws \ReflectionException
+     */
+    private static function generateEntityFromReflection(string $className): object
+    {
+        $reflectedEntity = new \ReflectionClass($className);
+        $entity = $reflectedEntity->newInstanceWithoutConstructor();
+        return $entity;
+    }
+
+    /**
      * @param DomainEvent $event
      * @throws EventApplierMethodNotDefinedException
      * @throws \ReflectionException
@@ -39,8 +51,7 @@ class EventSourcedEntity extends Entity
     public static function reconstituteFromEventStream(string $className, EventStream $eventStream): Entity
     {
         /** @var Entity $entity */
-        $reflectedEntity = new \ReflectionClass($className);
-        $entity = $reflectedEntity->newInstanceWithoutConstructor();
+        $entity = self::generateEntityFromReflection($className);
 
         self::executeResetEventStreamFromReflection($entity);
 
