@@ -25,4 +25,6 @@ interface Repository
     public function findByCriteria(array $criteria): array;
 
     public function findOneByCriteria(array $criteria): ?Entity;
+
+    public function delete(Entity $entity): void;
 }
