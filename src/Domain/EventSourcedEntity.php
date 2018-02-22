@@ -5,7 +5,7 @@ use ReflectionException;
 class EventSourcedEntity extends Entity
 {
     /** @var bool */
-    private $disabled = false;
+    protected $disabled = false;
 
     /**
      * @param string $className

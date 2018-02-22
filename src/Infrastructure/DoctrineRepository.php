@@ -10,6 +10,7 @@
 namespace StraTDeS\SharedKernel\Infrastructure;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
 use StraTDeS\SharedKernel\Domain\Entity;
 use StraTDeS\SharedKernel\Domain\EntityNotFoundException;
 use StraTDeS\SharedKernel\Domain\Id;
@@ -69,6 +70,16 @@ abstract class DoctrineRepository implements Repository
     {
         return $this->entityManager->getRepository($this->getEntityName())
             ->findOneBy($criteria);
+    }
+
+    /**
+     * @param Entity $entity
+     * @throws OptimisticLockException
+     */
+    public function delete(Entity $entity): void
+    {
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
     }
 
     public abstract function getEntityName(): string;
