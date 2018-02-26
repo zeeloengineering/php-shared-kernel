@@ -9,7 +9,7 @@
 
 namespace StraTDeS\SharedKernel\Domain;
 
-use Zeelo\API\Application\Common\ReadModel\ReadModel;
+use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
 
 interface ReadModelRepository
 {
