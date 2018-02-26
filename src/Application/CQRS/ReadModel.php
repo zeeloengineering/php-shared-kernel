@@ -1,4 +1,4 @@
-<?php namespace Zeelo\API\Application\Common\ReadModel;
+<?php namespace StraTDeS\SharedKernel\Application\CQRS;
 
 abstract class ReadModel
 {
