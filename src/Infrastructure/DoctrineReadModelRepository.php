@@ -11,11 +11,11 @@ namespace StraTDeS\SharedKernel\Infrastructure;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
+use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
 use StraTDeS\SharedKernel\Domain\EntityNotFoundException;
 use StraTDeS\SharedKernel\Domain\ReadModelRepository;
-use Zeelo\API\Application\Common\ReadModel\ReadModel;
 
-abstract class ReadModelDoctrineRepository implements ReadModelRepository
+abstract class DoctrineReadModelRepository implements ReadModelRepository
 {
     /** @var EntityManager */
     protected $entityManager;
