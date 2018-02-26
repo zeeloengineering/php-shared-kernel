@@ -11,12 +11,11 @@ namespace StraTDeS\SharedKernel\Infrastructure;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
-use StraTDeS\SharedKernel\Domain\Entity;
 use StraTDeS\SharedKernel\Domain\EntityNotFoundException;
-use StraTDeS\SharedKernel\Domain\Id;
-use StraTDeS\SharedKernel\Domain\Repository;
+use StraTDeS\SharedKernel\Domain\ReadModelRepository;
+use Zeelo\API\Application\Common\ReadModel\ReadModel;
 
-abstract class DoctrineRepository implements Repository
+abstract class ReadModelDoctrineRepository implements ReadModelRepository
 {
     /** @var EntityManager */
     protected $entityManager;
@@ -29,21 +28,21 @@ abstract class DoctrineRepository implements Repository
     /**
      * @inheritdoc
      */
-    public function get(Id $id): Entity
+    public function get(string $id): ReadModel
     {
-        /** @var Entity $entity */
-        $entity = $this->entityManager->getRepository($this->getEntityName())->find($id);
+        /** @var ReadModel $readModel */
+        $readModel = $this->entityManager->getRepository($this->getReadModelName())->find($id);
 
-        if(!$entity) {
+        if(!$readModel) {
             throw new EntityNotFoundException(
-                'Entity ' . $this->getEntityName() . ' with id ' . $id->getHumanReadableId()  . ' not found'
+                'ReadModel ' . $this->getReadModelName() . ' with id ' . $id  . ' not found'
             );
         }
 
-        return $entity;
+        return $readModel;
     }
 
-    public function find(Id $id): ?Entity
+    public function find(string $id): ?ReadModel
     {
         try {
             return $this->get($id);
@@ -56,38 +55,38 @@ abstract class DoctrineRepository implements Repository
     {
         $orderBy = $this->generateOrderByArray($orderColumn, $orderDirection);
 
-        return $this->entityManager->getRepository($this->getEntityName())
+        return $this->entityManager->getRepository($this->getReadModelName())
             ->findBy([], $orderBy, $limit ?? 10, $offset ?? 0);
     }
 
     public function findByCriteria(array $criteria): array
     {
-        return $this->entityManager->getRepository($this->getEntityName())
+        return $this->entityManager->getRepository($this->getReadModelName())
             ->findBy($criteria);
     }
 
     /**
      * @param array $criteria
-     * @return null|Entity|object
+     * @return null|ReadModel|object
      */
-    public function findOneByCriteria(array $criteria): ?Entity
+    public function findOneByCriteria(array $criteria): ?ReadModel
     {
-        return $this->entityManager->getRepository($this->getEntityName())
+        return $this->entityManager->getRepository($this->getReadModelName())
             ->findOneBy($criteria);
     }
 
     /**
-     * @param Entity $entity
+     * @param ReadModel $readModel
      * @throws OptimisticLockException
      * @throws \Doctrine\ORM\ORMException
      */
-    public function delete(Entity $entity): void
+    public function delete(ReadModel $readModel): void
     {
-        $this->entityManager->remove($entity);
+        $this->entityManager->remove($readModel);
         $this->entityManager->flush();
     }
 
-    public abstract function getEntityName(): string;
+    public abstract function getReadModelName(): string;
 
     /**
      * @param $orderColumn

@@ -9,16 +9,18 @@
 
 namespace StraTDeS\SharedKernel\Domain;
 
-interface Repository
+use Zeelo\API\Application\Common\ReadModel\ReadModel;
+
+interface ReadModelRepository
 {
     /**
-     * @param Id $id
-     * @return Entity
+     * @param string $id
+     * @return ReadModel
      * @throws EntityNotFoundException
      */
-    public function get(Id $id): Entity;
+    public function get(string $id): ReadModel;
 
-    public function find(Id $id): ?Entity;
+    public function find(string $id): ?ReadModel;
 
     public function all(int $offset, int $limit): array;
 
@@ -26,9 +28,9 @@ interface Repository
 
     /**
      * @param array $criteria
-     * @return null|Entity|object
+     * @return null|ReadModel|object
      */
-    public function findOneByCriteria(array $criteria): ?Entity;
+    public function findOneByCriteria(array $criteria): ?ReadModel;
 
-    public function delete(Entity $entity): void;
+    public function delete(ReadModel $readModel): void;
 }
