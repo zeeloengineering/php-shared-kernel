@@ -22,7 +22,7 @@ interface ReadModelRepository
 
     public function find(string $id): ?ReadModel;
 
-    public function all(int $offset, int $limit): array;
+    public function all(int $offset, int $limit, $orderColumn = null, $orderDirection = null): array;
 
     public function findByCriteria(array $criteria): array;
 
