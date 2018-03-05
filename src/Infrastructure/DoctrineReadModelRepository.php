@@ -12,6 +12,8 @@ namespace StraTDeS\SharedKernel\Infrastructure;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
+use StraTDeS\SharedKernel\Domain\Criteria\Criteria;
+use StraTDeS\SharedKernel\Domain\Criteria\CriteriaTransformerInterface;
 use StraTDeS\SharedKernel\Domain\EntityNotFoundException;
 use StraTDeS\SharedKernel\Domain\ReadModelRepository;
 
@@ -20,9 +22,13 @@ abstract class DoctrineReadModelRepository implements ReadModelRepository
     /** @var EntityManager */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    /** @var CriteriaTransformerInterface */
+    protected $criteriaTransformer;
+
+    public function __construct(EntityManager $entityManager, CriteriaTransformerInterface $criteriaTransformer)
     {
         $this->entityManager = $entityManager;
+        $this->criteriaTransformer = $criteriaTransformer;
     }
 
     /**
@@ -51,28 +57,44 @@ abstract class DoctrineReadModelRepository implements ReadModelRepository
         }
     }
 
-    public function all(int $offset = null, int $limit = null, $orderColumn = null, $orderDirection = null): array
+    /**
+     * @param Criteria|null $criteria
+     * @return array|ReadModel[]
+     */
+    public function findByCriteria(Criteria $criteria = null): array
     {
-        $orderBy = $this->generateOrderByArray($orderColumn, $orderDirection);
+        /** @var \Doctrine\Common\Collections\Criteria $doctrineCriteria */
+        $doctrineCriteria = $this->criteriaTransformer->transform($criteria);
 
         return $this->entityManager->getRepository($this->getReadModelName())
-            ->findBy([], $orderBy, $limit ?? 10, $offset ?? 0);
-    }
-
-    public function findByCriteria(array $criteria): array
-    {
-        return $this->entityManager->getRepository($this->getReadModelName())
-            ->findBy($criteria);
+            ->matching($doctrineCriteria)->getValues();
     }
 
     /**
-     * @param array $criteria
+     * @param Criteria $criteria
      * @return null|ReadModel|object
      */
-    public function findOneByCriteria(array $criteria): ?ReadModel
+    public function findOneByCriteria(Criteria $criteria = null): ?ReadModel
     {
-        return $this->entityManager->getRepository($this->getReadModelName())
-            ->findOneBy($criteria);
+        $criteria->limit(1);
+
+        $results = $this->findByCriteria($criteria);
+
+        if(count($results) == 1) {
+            return $results[0];
+        }
+
+        return null;
+    }
+
+    public function findAllByCriteria(Criteria $criteria = null): array
+    {
+        return $this->findByCriteria($criteria);
+    }
+
+    public function all(Criteria $criteria): array
+    {
+        return $this->findByCriteria($criteria);
     }
 
     /**
@@ -87,18 +109,4 @@ abstract class DoctrineReadModelRepository implements ReadModelRepository
     }
 
     public abstract function getReadModelName(): string;
-
-    /**
-     * @param $orderColumn
-     * @param $orderDirection
-     * @return array|null
-     */
-    private function generateOrderByArray($orderColumn, $orderDirection)
-    {
-        $orderBy = null;
-        if ($orderColumn && $orderDirection) {
-            $orderBy = [$orderColumn => $orderDirection];
-        }
-        return $orderBy;
-    }
 }
