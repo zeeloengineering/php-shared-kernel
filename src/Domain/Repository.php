@@ -9,6 +9,8 @@
 
 namespace StraTDeS\SharedKernel\Domain;
 
+use StraTDeS\SharedKernel\Domain\Criteria\Criteria;
+
 interface Repository
 {
     /**
@@ -22,13 +24,13 @@ interface Repository
 
     public function all(int $offset, int $limit): array;
 
-    public function findByCriteria(array $criteria): array;
+    public function findByCriteria(Criteria $criteria = null): array;
 
     /**
-     * @param array $criteria
+     * @param Criteria $criteria
      * @return null|Entity|object
      */
-    public function findOneByCriteria(array $criteria): ?Entity;
+    public function findOneByCriteria(Criteria $criteria = null): ?Entity;
 
     public function delete(Entity $entity): void;
 }

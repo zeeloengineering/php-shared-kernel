@@ -18,4 +18,19 @@ class FakeDomainEvent extends DomainEvent
     {
         parent::__construct( $id,  $entityId);
     }
+
+    public function getCode(): string
+    {
+        return 'FAKE_EVENT';
+    }
+
+    public function getVersion(): int
+    {
+        return 1;
+    }
+
+    public function getData(): array
+    {
+        return [];
+    }
 }

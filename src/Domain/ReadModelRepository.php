@@ -10,6 +10,7 @@
 namespace StraTDeS\SharedKernel\Domain;
 
 use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
+use StraTDeS\SharedKernel\Domain\Criteria\Criteria;
 
 interface ReadModelRepository
 {
@@ -22,15 +23,21 @@ interface ReadModelRepository
 
     public function find(string $id): ?ReadModel;
 
-    public function all(int $offset, int $limit, $orderColumn = null, $orderDirection = null): array;
+    public function all(Criteria $criteria): array;
 
-    public function findByCriteria(array $criteria): array;
+    public function findByCriteria(Criteria $criteria = null): array;
 
     /**
-     * @param array $criteria
+     * @param Criteria $criteria
      * @return null|ReadModel|object
      */
-    public function findOneByCriteria(array $criteria): ?ReadModel;
+    public function findOneByCriteria(Criteria $criteria = null): ?ReadModel;
+
+    /**
+     * @param Criteria $criteria
+     * @return ReadModel[]
+     */
+    public function findAllByCriteria(Criteria $criteria = null): array;
 
     public function delete(ReadModel $readModel): void;
 }
