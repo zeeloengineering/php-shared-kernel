@@ -23,9 +23,9 @@ interface ReadModelRepository
 
     public function find(string $id): ?ReadModel;
 
-    public function all(Criteria $criteria): array;
+    public function all(Criteria $criteria): PageableCollection;
 
-    public function findByCriteria(Criteria $criteria = null): array;
+    public function findByCriteria(Criteria $criteria = null): PageableCollection;
 
     /**
      * @param Criteria $criteria
@@ -35,9 +35,9 @@ interface ReadModelRepository
 
     /**
      * @param Criteria $criteria
-     * @return ReadModel[]
+     * @return PageableCollection
      */
-    public function findAllByCriteria(Criteria $criteria = null): array;
+    public function findAllByCriteria(Criteria $criteria = null): PageableCollection;
 
     public function delete(ReadModel $readModel): void;
 }
