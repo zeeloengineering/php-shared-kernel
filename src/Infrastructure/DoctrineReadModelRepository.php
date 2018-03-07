@@ -15,6 +15,7 @@ use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
 use StraTDeS\SharedKernel\Domain\Criteria\Criteria;
 use StraTDeS\SharedKernel\Domain\Criteria\CriteriaTransformerInterface;
 use StraTDeS\SharedKernel\Domain\EntityNotFoundException;
+use StraTDeS\SharedKernel\Domain\PageableCollection;
 use StraTDeS\SharedKernel\Domain\ReadModelRepository;
 
 abstract class DoctrineReadModelRepository implements ReadModelRepository
@@ -59,15 +60,26 @@ abstract class DoctrineReadModelRepository implements ReadModelRepository
 
     /**
      * @param Criteria|null $criteria
-     * @return array|ReadModel[]
+     * @return PageableCollection
      */
-    public function findByCriteria(Criteria $criteria = null): array
+    public function findByCriteria(Criteria $criteria = null): PageableCollection
     {
         /** @var \Doctrine\Common\Collections\Criteria $doctrineCriteria */
         $doctrineCriteria = $this->criteriaTransformer->transform($criteria);
 
-        return $this->entityManager->getRepository($this->getReadModelName())
+        $result = $this->entityManager->getRepository($this->getReadModelName())
             ->matching($doctrineCriteria)->getValues();
+
+        $doctrineCriteria->setMaxResults(null);
+        $doctrineCriteria->setFirstResult(null);
+
+        $count = $this->entityManager->getRepository($this->getReadModelName())
+            ->matching($doctrineCriteria)->count();
+
+        return new PageableCollection(
+            $result,
+            $count
+        );
     }
 
     /**
@@ -80,19 +92,19 @@ abstract class DoctrineReadModelRepository implements ReadModelRepository
 
         $results = $this->findByCriteria($criteria);
 
-        if(count($results) == 1) {
-            return $results[0];
+        if($results->getTotal() == 1) {
+            return $results->getItems()[0];
         }
 
         return null;
     }
 
-    public function findAllByCriteria(Criteria $criteria = null): array
+    public function findAllByCriteria(Criteria $criteria = null): PageableCollection
     {
         return $this->findByCriteria($criteria);
     }
 
-    public function all(Criteria $criteria): array
+    public function all(Criteria $criteria): PageableCollection
     {
         return $this->findByCriteria($criteria);
     }
