@@ -13,7 +13,8 @@
     ],
     "require": {
         "ramsey/uuid": "^3.7",
-        "doctrine/orm": "^2.5"
+        "doctrine/orm": "^2.5",
+        "php-amqplib/php-amqplib": "^2.7"
     },
     "autoload": {
         "psr-4": {
