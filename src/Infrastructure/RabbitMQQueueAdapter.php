@@ -5,8 +5,6 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
-use StraTDeS\SharedKernel\Domain\QueueRuntimeException;
-use StraTDeS\SharedKernel\Domain\QueueTimeoutException;
 
 class RabbitMQQueueAdapter implements QueueAdapterInterface
 {
@@ -43,8 +41,8 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
      * @param string $queueName
      * @param callable $consumer
      * @param bool $ack
-     * @throws QueueTimeoutException
      * @throws QueueRuntimeException
+     * @throws QueueTimeoutException
      */
     public function consume(string $queueName, callable $consumer, bool $ack = true): void
     {
