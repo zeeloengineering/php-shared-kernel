@@ -5,6 +5,8 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
+use StraTDeS\SharedKernel\Domain\QueueRuntimeException;
+use StraTDeS\SharedKernel\Domain\QueueTimeoutException;
 
 class RabbitMQQueueAdapter implements QueueAdapterInterface
 {
@@ -37,6 +39,13 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
         );
     }
 
+    /**
+     * @param string $queueName
+     * @param callable $consumer
+     * @param bool $ack
+     * @throws QueueTimeoutException
+     * @throws QueueRuntimeException
+     */
     public function consume(string $queueName, callable $consumer, bool $ack = true): void
     {
         $channel = $this->getChannel();
@@ -51,11 +60,9 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
             try {
                 $channel->wait();
             } catch (AMQPTimeoutException $e) {
-                die('timeout');
+                throw new QueueTimeoutException($e->getMessage(), $e->getCode());
             } catch (AMQPRuntimeException $e) {
-                die('runtime');
-            } catch (\Exception $e) {
-                die('other exception');
+                throw new QueueRuntimeException($e->getMessage(), $e->getCode());
             }
         }
 
@@ -63,6 +70,12 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
         $this->close();
     }
 
+    /**
+     * @param string $message
+     * @param string $queueName
+     * @throws QueueRuntimeException
+     * @throws QueueTimeoutException
+     */
     public function send(string $message, string $queueName): void
     {
         $channel = $this->getChannel();
@@ -77,11 +90,9 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
         try {
             $channel->basic_publish($msg, '', $queueName);
         } catch (AMQPTimeoutException $e) {
-            die('timeout');
+            throw new QueueTimeoutException($e->getMessage(), $e->getCode());
         } catch (AMQPRuntimeException $e) {
-            die('runtime exception');
-        } catch (\Exception $e) {
-            die('other exception');
+            throw new QueueRuntimeException($e->getMessage(), $e->getCode());
         }
     }
 
