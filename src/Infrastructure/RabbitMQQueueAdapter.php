@@ -8,7 +8,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class RabbitMQQueueAdapter implements QueueAdapterInterface
 {
-    /** @var RabbitMQConfigProviderInterface */
+    /** @var QueueAdapterConfigProviderInterface */
     private $rabbitMQConfigProvider;
 
     /** @var AMQPStreamConnection */
@@ -17,7 +17,7 @@ class RabbitMQQueueAdapter implements QueueAdapterInterface
     /** @var AMQPChannel */
     private $channel;
 
-    public function __construct(RabbitMQConfigProviderInterface $rabbitMQConfigProvider)
+    public function __construct(QueueAdapterConfigProviderInterface $rabbitMQConfigProvider)
     {
         $this->rabbitMQConfigProvider = $rabbitMQConfigProvider;
     }

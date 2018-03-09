@@ -1,6 +1,6 @@
 <?php namespace StraTDeS\SharedKernel\Infrastructure;
 
-interface RabbitMQConfigProviderInterface
+interface QueueAdapterConfigProviderInterface
 {
     public function getHost(): string;
 
