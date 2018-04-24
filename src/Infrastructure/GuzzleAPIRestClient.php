@@ -1,10 +1,23 @@
 <?php namespace StraTDeS\SharedKernel\Infrastructure;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 class GuzzleAPIRestClient implements APIRestClientInterface
 {
+    /** @var ClientInterface */
+    private $client;
+
+    public function __construct(ClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
+    public function getClient(): ClientInterface
+    {
+        return $this->client;
+    }
+
     /**
      * @param string $url
      * @param array $parameters
@@ -14,11 +27,10 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      */
     public function get(string $url, array $parameters = [], array $headers = []): array
     {
-        $urlWithParameters = $url;
         if (!empty($parameters)) {
-            $urlWithParameters .= '?'.http_build_url($parameters);
+            $url .= '?'.http_build_url($parameters);
         }
-        return $this->execute($urlWithParameters, 'GET', $parameters, $headers);
+        return $this->execute($url, 'GET', $parameters, $headers);
     }
 
     /**
@@ -67,9 +79,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      */
     public function execute(string $url, string $method, array $parameters = [], array $headers = []): array
     {
-        $client = new Client();
-
-        $res = $client->request($method, $url, [
+        $res = $this->client->request($method, $url, [
             'headers' => $headers,
             'form_params' => $parameters
         ]);
