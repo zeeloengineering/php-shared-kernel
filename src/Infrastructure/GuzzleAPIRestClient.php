@@ -13,16 +13,12 @@ class GuzzleAPIRestClient implements APIRestClientInterface
         $this->client = $client;
     }
 
-    public function getClient(): ClientInterface
-    {
-        return $this->client;
-    }
-
     /**
      * @param string $url
      * @param array $parameters
      * @param array $headers
      * @return array
+     * @throws \RuntimeException
      * @throws GuzzleException
      */
     public function get(string $url, array $parameters = [], array $headers = []): array
@@ -38,6 +34,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      * @param array $parameters
      * @param array $headers
      * @return array
+     * @throws \RuntimeException
      * @throws GuzzleException
      */
     public function post(string $url, array $parameters = [], array $headers = []): array
@@ -50,6 +47,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      * @param array $parameters
      * @param array $headers
      * @return array
+     * @throws \RuntimeException
      * @throws GuzzleException
      */
     public function patch(string $url, array $parameters = [], array $headers = []): array
@@ -62,6 +60,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      * @param array $parameters
      * @param array $headers
      * @return array
+     * @throws \RuntimeException
      * @throws GuzzleException
      */
     public function delete(string $url, array $parameters = [], array $headers = []): array
@@ -75,6 +74,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
      * @param array $parameters
      * @param array $headers
      * @return array
+     * @throws \RuntimeException
      * @throws GuzzleException
      */
     public function execute(string $url, string $method, array $parameters = [], array $headers = []): array
@@ -86,7 +86,7 @@ class GuzzleAPIRestClient implements APIRestClientInterface
 
         return [
             'status_code' => $res->getStatusCode(),
-            'body' => $res->getBody()
+            'body' => $res->getBody()->getContents()
         ];
     }
 }
