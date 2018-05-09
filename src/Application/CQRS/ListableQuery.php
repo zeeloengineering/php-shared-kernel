@@ -27,6 +27,26 @@ abstract class ListableQuery extends Query
         $this->orderDirection = $orderDirection ?? $this->getDefaultOrderDirection();
     }
 
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    public function getPerPage(): int
+    {
+        return $this->perPage;
+    }
+
+    public function getOrderBy(): string
+    {
+        return $this->orderBy;
+    }
+
+    public function getOrderDirection(): string
+    {
+        return $this->orderDirection;
+    }
+
     public function getDefaultPage(): int
     {
         return 1;
