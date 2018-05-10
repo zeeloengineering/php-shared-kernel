@@ -52,11 +52,12 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         return $search;
     }
 
-    private function convertStringToArray($search): array
+    private function convertStringToArray($search): ?array
     {
         if (!is_null($search) && !is_array($search)) {
             $search = [$this->getDefaultSearchFieldName() => $search];
         }
+
         return $search;
     }
 }
