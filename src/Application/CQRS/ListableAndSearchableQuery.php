@@ -25,7 +25,7 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         $this->search = $search;
     }
 
-    public function getSearch(): array
+    public function getSearch(): ?array
     {
         return $this->search;
     }
