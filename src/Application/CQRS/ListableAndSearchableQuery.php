@@ -39,16 +39,19 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         return null;
     }
 
-    private function mapKeys($search)
+    private function mapKeys($search = null)
     {
-        foreach ($search as $key => $value) {
-            if (isset($this->getFieldsMapping()[$key])) {
-                $newKey = $this->getFieldsMapping()[$key];
+        if(!is_null($search)) {
+            foreach ($search as $key => $value) {
+                if (isset($this->getFieldsMapping()[$key])) {
+                    $newKey = $this->getFieldsMapping()[$key];
 
-                $search[$newKey] = $value;
-                unset($search[$key]);
+                    $search[$newKey] = $value;
+                    unset($search[$key]);
+                }
             }
         }
+
         return $search;
     }
 
