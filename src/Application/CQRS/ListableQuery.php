@@ -57,12 +57,12 @@ abstract class ListableQuery extends Query
         return 10;
     }
 
-    public function getDefaultOrderBy(): string
+    public function getDefaultOrderBy(): ?string
     {
         return null;
     }
 
-    public function getDefaultOrderDirection(): string
+    public function getDefaultOrderDirection(): ?string
     {
         return null;
     }
