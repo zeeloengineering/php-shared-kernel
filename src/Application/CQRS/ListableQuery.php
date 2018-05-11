@@ -37,12 +37,12 @@ abstract class ListableQuery extends Query
         return $this->perPage;
     }
 
-    public function getOrderBy(): string
+    public function getOrderBy(): ?string
     {
         return $this->orderBy;
     }
 
-    public function getOrderDirection(): string
+    public function getOrderDirection(): ?string
     {
         return $this->orderDirection;
     }
@@ -57,12 +57,12 @@ abstract class ListableQuery extends Query
         return 10;
     }
 
-    public function getDefaultOrderBy(): string
+    public function getDefaultOrderBy(): ?string
     {
         return null;
     }
 
-    public function getDefaultOrderDirection(): string
+    public function getDefaultOrderDirection(): ?string
     {
         return null;
     }

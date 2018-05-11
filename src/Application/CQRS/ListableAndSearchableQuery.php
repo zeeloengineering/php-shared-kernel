@@ -19,22 +19,48 @@ abstract class ListableAndSearchableQuery extends ListableQuery
             $orderDirection
         );
 
-        if (!is_null($search) && !is_array($search)) {
-            $search = [$this->getDefaultSearchFieldName() => $search];
-        }
+        $search = $this->convertStringToArray($search);
+        $search = $this->mapKeys($search);
 
         $this->search = $search;
     }
 
-    public function getSearch(): array
+    public function getSearch(): ?array
     {
         return $this->search;
     }
 
     public abstract function getDefaultSearchFieldName(): string;
 
+    public abstract function getFieldsMapping(): array;
+
     public function getDefaultSearch(): array
     {
         return null;
+    }
+
+    private function mapKeys($search = null)
+    {
+        if(!is_null($search)) {
+            foreach ($search as $key => $value) {
+                if (isset($this->getFieldsMapping()[$key])) {
+                    $newKey = $this->getFieldsMapping()[$key];
+
+                    $search[$newKey] = $value;
+                    unset($search[$key]);
+                }
+            }
+        }
+
+        return $search;
+    }
+
+    private function convertStringToArray($search): ?array
+    {
+        if (!is_null($search) && !is_array($search)) {
+            $search = [$this->getDefaultSearchFieldName() => $search];
+        }
+
+        return $search;
     }
 }
