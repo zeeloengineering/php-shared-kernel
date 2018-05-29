@@ -15,7 +15,7 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         parent::__construct(
             $page,
             $perPage,
-            $orderBy,
+            $this->mapKeys($orderBy),
             $orderDirection
         );
 
