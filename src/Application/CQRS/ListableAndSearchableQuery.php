@@ -15,7 +15,7 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         parent::__construct(
             $page,
             $perPage,
-            $this->mapKeys($orderBy),
+            $this->mapOrderByKeys($orderBy),
             $orderDirection
         );
 
@@ -53,6 +53,16 @@ abstract class ListableAndSearchableQuery extends ListableQuery
         }
 
         return $search;
+    }
+
+    private function mapOrderByKeys($orderBy = null)
+    {
+        if ( $orderBy !== null && isset($this->getFieldsMapping()[$orderBy]) ) {
+            $newValue = $this->getFieldsMapping()[$orderBy];
+            $orderBy = $newValue;
+        }
+
+        return $orderBy;
     }
 
     private function convertStringToArray($search): ?array
