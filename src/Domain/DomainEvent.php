@@ -61,4 +61,13 @@ abstract class DomainEvent
     public abstract function getVersion(): int;
 
     public abstract function getData(): array;
+
+    public abstract static function buildFromDataWithVersion(
+        Id $id,
+        Id $entityId,
+        Id $creator = null,
+        \DateTime $createdAt = null,
+        array $data,
+        int $eventVersion
+    ): DomainEvent;
 }
