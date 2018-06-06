@@ -36,6 +36,29 @@ abstract class DomainEvent
         $this->createdAt = $createdAt ?? new \DateTime();
     }
 
+    public static function newFromData(
+        string $eventClassName,
+        Id $id,
+        Id $entityId,
+        ?Id $creator,
+        ?\DateTime $createdAt,
+        array $data,
+        int $dataVersion
+    ): DomainEvent
+    {
+        $reflectedEntity = new \ReflectionClass($eventClassName);
+
+        /** @var DomainEvent $domainEvent*/
+        $domainEvent = $reflectedEntity->newInstanceWithoutConstructor();
+
+        $domainEvent->id = $id;
+        $domainEvent->entityId = $entityId;
+        $domainEvent->creator = $creator;
+        $domainEvent->createdAt = $createdAt;
+        $domainEvent->setData($data, $dataVersion);
+        return $domainEvent;
+    }
+
     final public function getId(): Id
     {
         return $this->id;
@@ -62,12 +85,5 @@ abstract class DomainEvent
 
     public abstract function getData(): array;
 
-    public abstract static function buildFromDataWithVersion(
-        Id $id,
-        Id $entityId,
-        Id $creator = null,
-        \DateTime $createdAt = null,
-        array $data,
-        int $eventVersion
-    ): DomainEvent;
+    public abstract function setData(array $eventData, int $dataVersion);
 }
