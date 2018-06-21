@@ -19,4 +19,9 @@ interface PersistentReadModelRepository
      * @throws RepositoryException
      */
     public function save(ReadModel $readModel): void;
+
+    /**
+     * @throws RepositoryException
+     */
+    public function clear(): void;
 }

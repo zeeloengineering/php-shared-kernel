@@ -9,6 +9,7 @@
 
 namespace StraTDeS\SharedKernel\Infrastructure;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use StraTDeS\SharedKernel\Application\CQRS\ReadModel;
 use StraTDeS\SharedKernel\Domain\PersistentReadModelRepository;
@@ -24,6 +25,24 @@ abstract class DoctrinePersistentReadModelRepository extends DoctrineReadModelRe
         try {
             $this->entityManager->flush();
         } catch (OptimisticLockException $e) {
+            throw new RepositoryException($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function clear(): void
+    {
+        try {
+            $cmd = $this->entityManager->getClassMetadata($this->getReadModelName());
+            $connection = $this->entityManager->getConnection();
+            $dbPlatform = $connection->getDatabasePlatform();
+            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+            $q = $dbPlatform->getTruncateTableSql($cmd->getTableName());
+            $connection->executeUpdate($q);
+            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+        } catch (DBALException $e) {
             throw new RepositoryException($e->getMessage(), $e->getCode());
         }
     }
