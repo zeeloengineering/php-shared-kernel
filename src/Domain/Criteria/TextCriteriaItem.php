@@ -30,6 +30,9 @@ class TextCriteriaItem extends CriteriaItem
 
     public function shouldApply(): bool
     {
+        if ($this->value == null) {
+            return true;
+        }
         return $this->value && strlen($this->value) > 0;
     }
 }
