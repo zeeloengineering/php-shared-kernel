@@ -12,7 +12,7 @@ namespace StraTDeS\SharedKernel\Domain;
 abstract class DomainEvent
 {
     const EVENT_VERSION = 1;
-    
+
     /** @var Id */
     private $id;
 
@@ -76,17 +76,20 @@ abstract class DomainEvent
         return $this->creator;
     }
 
+    public function getCode(): string
+    {
+        return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', current(array_reverse(explode("\\",get_called_class())))));
+    }
+
     final public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
-    
+
     public function getVersion(): int
     {
         return static::EVENT_VERSION;
     }
-
-    public abstract function getCode(): string;
 
     public abstract function getData(): array;
 
