@@ -26,13 +26,12 @@ abstract class DomainEvent
     private $createdAt;
 
     public function __construct(
-        Id $id,
         Id $entityId,
         Id $creator = null,
         \DateTime $createdAt = null
     )
     {
-        $this->id = $id;
+        $this->id = UUIDV4::generate();
         $this->entityId = $entityId;
         $this->creator = $creator;
         $this->createdAt = $createdAt ?? new \DateTime();
