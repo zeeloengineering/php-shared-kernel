@@ -1,5 +1,7 @@
 <?php namespace StraTDeS\SharedKernel\Application\CQRS;
 
+use StraTDeS\SharedKernel\Domain\UUIDV4;
+
 abstract class ReadModel
 {
     /** @var string */
@@ -11,9 +13,9 @@ abstract class ReadModel
     /** @var \DateTime */
     private $updatedAt;
 
-    public function __construct(string $id, \DateTime $createdAt = null, \DateTime $updatedAt = null)
+    public function __construct(\DateTime $createdAt = null, \DateTime $updatedAt = null)
     {
-        $this->id = $id;
+        $this->id = UUIDV4::generate();
         $this->createdAt = $createdAt ?? new \DateTime();
         $this->updatedAt = $updatedAt ?? new \DateTime();
     }
