@@ -71,7 +71,7 @@ abstract class Command
                             return $id->getHumanReadableId();
                         }, $array);
                     } else {
-                        $value = $property->getValue($entity);
+                        $value = $property->getValue($entity)->toArray();
                     }
                 }
             } else {
