@@ -65,9 +65,14 @@ abstract class Command
                 if ($property->getValue($entity) === null || empty($property->getValue($entity))) {
                     $value = $property->getValue($entity);
                 } else {
-                    $value = array_map(function (Id $id) {
-                        return $id->getHumanReadableId();
-                    }, $property->getValue($entity));
+                    $array = $property->getValue($entity);
+                    if (\gettype($array[0]) === Id::class) {
+                        $value = array_map(function (Id $id) {
+                            return $id->getHumanReadableId();
+                        }, $array);
+                    } else {
+                        $value = $property->getValue($entity);
+                    }
                 }
             } else {
                 $value = $property->getValue($entity);
