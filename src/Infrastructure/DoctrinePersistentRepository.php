@@ -20,6 +20,7 @@ abstract class DoctrinePersistentRepository extends DoctrineRepository implement
      */
     public function save(Entity $entity): void
     {
+        $entity->updated = false;
         $this->entityManager->persist($entity);
         try {
             $this->entityManager->flush();

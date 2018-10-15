@@ -90,7 +90,7 @@ abstract class DomainEvent
         return static::EVENT_VERSION;
     }
 
-    public abstract function getData(): array;
+    abstract public function getData(): array;
 
-    public abstract function setData(array $eventData, int $dataVersion);
+    abstract public function setData(array $eventData, int $dataVersion): void;
 }

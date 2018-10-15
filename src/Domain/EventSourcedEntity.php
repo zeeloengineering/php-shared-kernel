@@ -7,6 +7,12 @@ class EventSourcedEntity extends Entity
     /** @var bool */
     protected $disabled = false;
 
+    /** @var bool */
+    protected $isUpdatable = false;
+
+    /** @var bool */
+    protected $updated = false;
+
     /**
      * @param string $className
      * @return Entity
@@ -17,6 +23,9 @@ class EventSourcedEntity extends Entity
         $reflectedEntity = new \ReflectionClass($className);
         /** @var Entity $entity */
         $entity = $reflectedEntity->newInstanceWithoutConstructor();
+
+        $entity->isUpdatable = true;
+
         return $entity;
     }
 
@@ -29,6 +38,10 @@ class EventSourcedEntity extends Entity
     {
         $this->recordThat($event);
         $this->apply($event);
+
+        if ($this->isUpdatable) {
+            $this->updated = true;
+        }
     }
 
     /**
@@ -36,10 +49,10 @@ class EventSourcedEntity extends Entity
      * @throws EventApplierMethodNotDefinedException
      * @throws ReflectionException
      */
-    final private function apply(DomainEvent $event): void
+    private function apply(DomainEvent $event): void
     {
         $methodName = self::getApplyMethodNameFromEventCode($event);
-        $className = get_class($this);
+        $className = \get_class($this);
 
         if(!method_exists($this, $methodName)) {
             throw new EventApplierMethodNotDefinedException("$methodName is not defined for $className");
