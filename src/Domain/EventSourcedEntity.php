@@ -124,4 +124,41 @@ class EventSourcedEntity extends Entity
     {
         return $this->disabled;
     }
+
+    public function isUpdated(): bool
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(bool $updated): void
+    {
+        $this->updated = $updated;
+    }
+
+    public function handleEntityUpdated(DomainEvent $domainEvent): void
+    {
+        if ($this->updated) {
+            $this->recordThat($domainEvent);
+        }
+    }
+
+    /**
+     * @param array $entityProperties
+     * @return object
+     * @throws ReflectionException
+     */
+    public static function fromArray(array $entityProperties)
+    {
+        $reflectedEntity = new \ReflectionClass(static::class);
+        $properties = $reflectedEntity->getProperties();
+        $entity = $reflectedEntity->newInstanceWithoutConstructor();
+        /** @var \ReflectionProperty $property */
+        foreach ($properties as $property) {
+            $property->setAccessible(true);
+            $property->setValue($entity, $entityProperties[$property->getName()]);
+            $property->setAccessible(false);
+        }
+
+        return $entity;
+    }
 }
