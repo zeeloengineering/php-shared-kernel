@@ -11,5 +11,4 @@ namespace StraTDeS\SharedKernel\Application\CQRS;
 
 abstract class Command
 {
-
 }
