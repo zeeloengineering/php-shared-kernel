@@ -143,21 +143,17 @@ class EventSourcedEntity extends Entity
     }
 
     /**
-     * @param array $entityProperties
+     * @param array $entityParams
      * @return object
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
-    public static function fromArray(array $entityProperties)
+    public static function fromArray(array $entityParams)
     {
         $reflectedEntity = new \ReflectionClass(static::class);
         $properties = $reflectedEntity->getProperties();
         $entity = $reflectedEntity->newInstanceWithoutConstructor();
-        /** @var \ReflectionProperty $property */
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $property->setValue($entity, $entityProperties[$property->getName()]);
-            $property->setAccessible(false);
-        }
+
+        static::setProperties($properties, $entityParams, $entity);
 
         return $entity;
     }
