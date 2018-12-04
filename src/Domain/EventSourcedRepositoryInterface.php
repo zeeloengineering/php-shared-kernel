@@ -2,7 +2,7 @@
 
 use StraTDeS\SharedKernel\Infrastructure\RepositoryException;
 
-interface EventSourcedRepository
+interface EventSourcedRepositoryInterface
 {
     /**
      * @param Id $id
