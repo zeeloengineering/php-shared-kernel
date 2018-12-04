@@ -26,4 +26,30 @@ class EventStream
     {
         return $this->events;
     }
+
+    /**
+     * @param UUIDV4|null $eventStoreThreshold
+     * @throws \Exception
+     */
+    public function cutUpTo(UUIDV4 $eventStoreThreshold = null)
+    {
+        if ($eventStoreThreshold !== null) {
+            $newDomainEventArray = [];
+            $found = false;
+            foreach ($this->events as $domainEvent) {
+                /** @var DomainEvent $domainEvent */
+                $newDomainEventArray[] = $domainEvent;
+                if (UUIDV4::fromString(bin2hex($domainEvent->getId()))->getHumanReadableId() == $eventStoreThreshold->getHumanReadableId()) {
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found) {
+                throw new \Exception("You're trying to cut an event stream using an id that's not present on the event stream (".$eventStoreThreshold->getHumanReadableId().")");
+            }
+            $this->events = $newDomainEventArray;
+        }
+
+        return $this;
+    }
 }

@@ -46,4 +46,9 @@ abstract class Entity
     {
         return $this->id;
     }
+
+    public function getEventStream(): EventStream
+    {
+        return $this->eventStream;
+    }
 }
