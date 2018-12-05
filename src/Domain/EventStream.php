@@ -39,7 +39,7 @@ class EventStream
             foreach ($this->events as $domainEvent) {
                 /** @var DomainEvent $domainEvent */
                 $newDomainEventArray[] = $domainEvent;
-                if (UUIDV4::fromString(bin2hex($domainEvent->getId()))->getHumanReadableId() == $eventStoreThreshold->getHumanReadableId()) {
+                if ($domainEvent->getId()->getHumanReadableId() == $eventStoreThreshold->getHumanReadableId()) {
                     $found = true;
                     break;
                 }
