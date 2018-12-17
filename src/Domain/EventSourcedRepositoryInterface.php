@@ -22,4 +22,11 @@ interface EventSourcedRepositoryInterface
      * @throws RepositoryException
      */
     public function save(Entity $entity): void;
+
+
+    /**
+     * @param Id $id
+     * @param string $entityName
+     */
+    public function findAll(Id $id, string $entityName);
 }
