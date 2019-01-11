@@ -29,4 +29,20 @@ interface EventSourcedRepositoryInterface
      * @param string $entityName
      */
     public function findAll(Id $id, string $entityName);
+
+    /**
+     * @return EventManagerService
+     */
+    public function getEventManager(): EventManagerService;
+
+    /**
+     * @return EventStoreInterface
+     */
+    public function getEventStore(): EventStoreInterface;
+
+    /**
+     * @return EntityRelationsInterface
+     */
+    public function getEntityRelations(): EntityRelationsInterface;
+
 }
