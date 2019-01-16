@@ -2,6 +2,13 @@
 
 class RelationsQueryBuilder
 {
+
+    /** @var bool */
+    const INCLUDE_DISABLED = false;
+
+    /** @var bool */
+    const ONLY_ENABLED = true;
+
     /** @var array $heap */
     protected $heap = [];
 
@@ -13,26 +20,28 @@ class RelationsQueryBuilder
      * @param string $id
      * @param array $className
      * @param EntityRelationsInterface $entityRelations
+     * @param bool $showDisabled
      */
-    public function __construct(string $id, array $className, EntityRelationsInterface $entityRelations)
+    public function __construct(string $id, array $className, EntityRelationsInterface $entityRelations, $showDisabled=false)
     {
-        $this->heap[] = [$id, $className];
+        $this->heap[] = [$id, $className, $showDisabled];
         $this->entityRelations = $entityRelations;
     }
 
     /**
      * @param string|array $className
+     * @param bool $showDisabled
      * @return $this
      * @throws \Exception
      */
-    public function findAll($className)
+    public function findAll($className, $showDisabled=false)
     {
         if (\is_string($className)) {
             $className = [$className];
         } elseif(!\is_array($className)) {
             throw new \Exception('FindAll: First argument must be an array or string');
         }
-        $this->heap[] = [$className];
+        $this->heap[] = [$className, $showDisabled];
 
         return $this;
     }
