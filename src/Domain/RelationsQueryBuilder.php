@@ -1,8 +1,4 @@
-<?php namespace Zeelo\API\Domain\Common\Service;
-
-use StraTDeS\SharedKernel\Domain\EntityRelationsInterface;
-use StraTDeS\SharedKernel\Domain\EventSourcedRepositoryInterface;
-use StraTDeS\SharedKernel\Domain\UUIDV4;
+<?php namespace StraTDeS\SharedKernel\Domain;
 
 class RelationsQueryBuilder
 {
