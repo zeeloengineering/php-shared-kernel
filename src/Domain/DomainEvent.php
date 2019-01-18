@@ -25,18 +25,35 @@ abstract class DomainEvent
     /** @var \DateTime */
     private $createdAt;
 
+    /** @var string */
+    private $encryptedKey;
+
     public function __construct(
         Id $entityId,
         Id $creator = null,
-        \DateTime $createdAt = null
+        \DateTime $createdAt = null,
+        string $encryptedKey = null
     )
     {
         $this->id = UUIDV4::generate();
         $this->entityId = $entityId;
         $this->creator = $creator;
         $this->createdAt = $createdAt ?? new \DateTime();
+        $this->encryptedKey = $encryptedKey;
     }
 
+    /**
+     * @param string $eventClassName
+     * @param Id $id
+     * @param Id $entityId
+     * @param null|Id $creator
+     * @param \DateTime|null $createdAt
+     * @param array $data
+     * @param int $dataVersion
+     * @param string|null $encryptedKey
+     * @return DomainEvent
+     * @throws \ReflectionException
+     */
     public static function newFromData(
         string $eventClassName,
         Id $id,
@@ -44,7 +61,8 @@ abstract class DomainEvent
         ?Id $creator,
         ?\DateTime $createdAt,
         array $data,
-        int $dataVersion
+        int $dataVersion,
+        string $encryptedKey = null
     ): DomainEvent
     {
         $reflectedEntity = new \ReflectionClass($eventClassName);
@@ -56,7 +74,9 @@ abstract class DomainEvent
         $domainEvent->entityId = $entityId;
         $domainEvent->creator = $creator;
         $domainEvent->createdAt = $createdAt;
+        $domainEvent->encryptedKey = $encryptedKey;
         $domainEvent->setData($data, $dataVersion);
+
         return $domainEvent;
     }
 
@@ -77,7 +97,7 @@ abstract class DomainEvent
 
     public function getCode(): string
     {
-        return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', current(array_reverse(explode("\\",get_called_class())))));
+        return strtoupper(preg_replace('/(?<!^)[A-Z]/', '_$0', current(array_reverse(explode("\\", \get_called_class())))));
     }
 
     final public function getCreatedAt(): \DateTime
@@ -88,6 +108,16 @@ abstract class DomainEvent
     public function getVersion(): int
     {
         return static::EVENT_VERSION;
+    }
+
+    public function getEncryptedKey(): ?string
+    {
+        return $this->encryptedKey;
+    }
+
+    public function setEncryptedKey(string $encryptedKey = null): void
+    {
+        $this->encryptedKey = $encryptedKey;
     }
 
     abstract public function getData(): array;
