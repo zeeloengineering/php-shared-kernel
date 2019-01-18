@@ -7,44 +7,67 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 
 class EventSourcedEncryptedEntity extends EventSourcedEntity
 {
-    /** @var string */
-    private $encryptedKey = null;
+    /** @var string|null */
+    protected $encryptedKey;
 
     /**
      * EventSourcedEncryptedEntity constructor.
      * @param Id $id
-     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
+     * @throws EnvironmentIsBrokenException
      */
     public function __construct(Id $id)
     {
         parent::__construct($id);
-        $this->encryptedKey = Key::createNewRandomKey();
+
+        if ($this->encryptedKey === null) {
+            $this->encryptedKey = Key::createNewRandomKey()->saveToAsciiSafeString();
+        }
     }
 
     /**
-     * @param $string
+     * @param string $string
+     * @param string $encryptedKey
      * @return string
      */
-    public function encrypt($string): string {
+    public static function encrypt(string $string, string $encryptedKey = null): string
+    {
+        if ($encryptedKey === null) {
+            return $string;
+        }
+
         try {
-            $encryptedString = Crypto::encryptWithPassword($string, $this->encryptedKey);
+            $encryptedString = Crypto::encryptWithPassword($string, $encryptedKey);
         } catch(EnvironmentIsBrokenException $e) {
             return $string;
         }
+
         return $encryptedString;
     }
 
     /**
-     * @param $encryptedString
+     * @param string $encryptedString
+     * @param string $encryptedKey
      * @return string
      */
-    public function decrypt($encryptedString): string {
+    public static function decrypt(string $encryptedString, string $encryptedKey = null): string
+    {
+        if ($encryptedKey === null) {
+            return $encryptedString;
+        }
+
         try {
-            $string = Crypto::decryptWithPassword($encryptedString, $this->encryptedKey);
+            $string = Crypto::decryptWithPassword($encryptedString, $encryptedKey);
         } catch(WrongKeyOrModifiedCiphertextException $e) {
             return $encryptedString;
         } catch(EnvironmentIsBrokenException $e) {
             return $encryptedString;
         }
+
+        return $string;
+    }
+
+    public function getEncryptedKey(): ?string
+    {
+        return $this->encryptedKey;
     }
 }

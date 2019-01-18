@@ -29,9 +29,10 @@ class EventStream
 
     /**
      * @param UUIDV4|null $eventStoreThreshold
+     * @return EventStream
      * @throws \Exception
      */
-    public function cutUpTo(UUIDV4 $eventStoreThreshold = null)
+    public function cutUpTo(UUIDV4 $eventStoreThreshold = null): EventStream
     {
         if ($eventStoreThreshold !== null) {
             $newDomainEventArray = [];
@@ -39,7 +40,7 @@ class EventStream
             foreach ($this->events as $domainEvent) {
                 /** @var DomainEvent $domainEvent */
                 $newDomainEventArray[] = $domainEvent;
-                if ($domainEvent->getId()->getHumanReadableId() == $eventStoreThreshold->getHumanReadableId()) {
+                if ($domainEvent->getId()->getHumanReadableId() === $eventStoreThreshold->getHumanReadableId()) {
                     $found = true;
                     break;
                 }

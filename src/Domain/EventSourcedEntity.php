@@ -144,16 +144,17 @@ class EventSourcedEntity extends Entity
 
     /**
      * @param array $entityParams
+     * @param string|null $encryptionKey
      * @return object
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function fromArray(array $entityParams)
+    public static function fromArray(array $entityParams, string $encryptionKey = null)
     {
         $reflectedEntity = new \ReflectionClass(static::class);
         $properties = $reflectedEntity->getProperties();
         $entity = $reflectedEntity->newInstanceWithoutConstructor();
 
-        static::setProperties($properties, $entityParams, $entity);
+        static::setProperties($properties, $entityParams, $entity, $encryptionKey);
 
         return $entity;
     }

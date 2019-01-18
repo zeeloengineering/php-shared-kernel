@@ -45,4 +45,8 @@ interface EventSourcedRepositoryInterface
      */
     public function getEntityRelations(): EntityRelationsInterface;
 
+    /**
+     * @param EventSourcedEncryptedEntity $entity
+     */
+    public function anonymize(EventSourcedEncryptedEntity $entity): void;
 }

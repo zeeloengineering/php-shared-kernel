@@ -10,6 +10,8 @@ interface EventStoreInterface
      */
     public function save(DomainEvent $domainEvent): void;
 
+    public function anonymize(Id $entityId): void;
+
     public function getByEntityId(Id $id): EventStream;
 
     public function getByEventCodes(array $eventCodes): EventStream;
